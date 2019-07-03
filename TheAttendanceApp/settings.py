@@ -24,7 +24,7 @@ SECRET_KEY = '=$wpo*(&=w5i7(0^v4@$g+qd!nk*%$mz&$%%4yguzaraxo!ump'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['minor.abhinavdev.com.np', ]
 
 # Application definition
 

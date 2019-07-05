@@ -9,7 +9,8 @@ class RoutineAdmin(admin.ModelAdmin):
 
 
 class RoutineDetailAdmin(admin.ModelAdmin):
-    list_display = ('from_time', 'to_time', 'room','day_of_week', 'routine_of')
+    list_display = ('from_time', 'to_time', 'room', 'day_of_week', 'routine_of')
+    filter_horizontal = ('teachers',)
 
 
 admin.site.register(Routine, RoutineAdmin)

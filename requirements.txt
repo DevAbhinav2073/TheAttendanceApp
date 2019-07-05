@@ -1,4 +1,8 @@
 Django==2.2.2
+django-filter==1.1.0
+django-rest-auth==0.9.5
 djangorestframework==3.9.4
+djangorestframework-filters==0.11.1
 pytz==2019.1
+six==1.12.0
 sqlparse==0.3.0

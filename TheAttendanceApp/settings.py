@@ -24,7 +24,7 @@ SECRET_KEY = '=$wpo*(&=w5i7(0^v4@$g+qd!nk*%$mz&$%%4yguzaraxo!ump'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['minor.abhinavdev.com.np', ]
+ALLOWED_HOSTS = ['minor.abhinavdev.com.np', '*']
 
 # Application definition
 
@@ -43,7 +43,8 @@ INSTALLED_APPS += [
     'apps.routine',
     'apps.attendance',
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    "rest_auth",
 
 ]
 
@@ -59,6 +60,20 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'TheAttendanceApp.urls'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+
+    ),
+    # 'EXCEPTION_HANDLER': 'apps.authuser.exception_handler.custom_exception_handler'
+}
 
 TEMPLATES = [
     {

@@ -14,6 +14,14 @@ class User(AbstractUser):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @property
+    def is_student(self):
+        return self.user_type == USER_TYPE_STUDENT
+
+    @property
+    def is_teacher(self):
+        return self.user_type == USER_TYPE_TEACHER
+
 
 class StudentManager(UserManager):
     def get_queryset(self):
@@ -29,7 +37,7 @@ class Student(User):
 
 class TeacherManager(UserManager):
     def get_queryset(self):
-        return super().get_queryset().filter(user_type=USER_TYPE_STUDENT)
+        return super().get_queryset().filter(user_type=USER_TYPE_TEACHER)
 
 
 class Teacher(User):
@@ -43,7 +51,8 @@ class TeacherDetail(models.Model):
     user = models.OneToOneField('authuser.User', limit_choices_to={
         'user_type': USER_TYPE_TEACHER
     }, related_name='teacher_detail', on_delete=models.CASCADE)
-
+    is_full_timer = models.BooleanField(default=True)
+    subjects = models.CharField(max_length=100, null=True)
     def __str__(self):
         return 'Details of %s teacher' % (self.user.get_full_name(),)
 
@@ -55,18 +64,9 @@ class StudentDetail(models.Model):
     batch = models.CharField(max_length=10, choices=BATCH_CHOICES)
     programme = models.ForeignKey('information.Programme', on_delete=models.CASCADE)
     roll_number = models.IntegerField()
-    current_year = models.IntegerField(choices=(
-        (1, 'I'),
-        (2, 'II'),
-        (3, 'III'),
-        (4, 'IV'),
-        (5, 'V'),
-    ))
-    current_part = models.IntegerField(choices=(
-        (1, 'I'),
-        (2, 'II'),
-    ))
-    group = models.CharField(max_length=1, choices=GROUP_CHOICES )
+    current_year = models.CharField(max_length=5, choices=YEAR_CHOICES)
+    current_part = models.CharField(max_length=5, choices=PART_CHOICES)
+    group = models.CharField(max_length=1, choices=GROUP_CHOICES)
 
     def __str__(self):
         return 'Details of %s student' % (self.user.get_full_name(),)

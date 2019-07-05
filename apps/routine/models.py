@@ -17,7 +17,9 @@ class Routine(models.Model):
 class RoutineDetail(models.Model):
     routine_of = models.ForeignKey('routine.Routine', on_delete=models.CASCADE)
     day_of_week = models.IntegerField(choices=DAY_OF_WEEK_CHOICES_TUPLE)
-    teachers = models.ManyToManyField('authuser.Teacher', blank=True)
+    teachers = models.ManyToManyField('authuser.Teacher', limit_choices_to={
+        'user_type': USER_TYPE_TEACHER
+    }, blank=True)
     from_time = models.TimeField(default=datetime.now)
     to_time = models.TimeField(default=datetime.now)
     subject = models.CharField(max_length=100, blank=True, null=True,

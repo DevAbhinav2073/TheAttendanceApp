@@ -27,7 +27,7 @@ class GetRoutineView(ListAPIView):
             routine_details = RoutineDetail.objects.filter(routine_of__in=routine_instance, day_of_week=week_day)
             return routine_details
         elif self.request.user.is_teacher and hasattr(self.request.user, 'teacher_detail'):
-            routine_details = RoutineDetail.objects.filter(teacher=self.request.user)
+            routine_details = RoutineDetail.objects.filter(teachers=self.request.user)
 
             return routine_details
         return self.queryset.none()

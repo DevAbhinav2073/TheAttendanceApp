@@ -42,4 +42,14 @@ class NewUserAdmin(UserAdmin):
         return super().changeform_view(request, object_id, form_url, extra_context)
 
 
+class StudentDetailAdmin(admin.ModelAdmin):
+    exclude = ('user', )
+
+
+class TeacherDetailAdmin(admin.ModelAdmin):
+    exclude = ('user', )
+
+
+admin.site.register(StudentDetail, StudentDetailAdmin)
+admin.site.register(TeacherDetail, TeacherDetailAdmin)
 admin.site.register(User, NewUserAdmin)

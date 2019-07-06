@@ -32,6 +32,11 @@ def create_student_user(sender, instance, created, *args, **kwargs):
         instance.user = user
         instance.save()
         user.save()
+    else:
+        user = instance.user
+        user.email = instance.email
+        user.username = instance.email
+        user.save()
 
 
 @receiver(post_save, sender=TeacherDetail)
@@ -44,4 +49,10 @@ def create_teacher_user(sender, instance, created, *args, **kwargs):
         user.set_password(password)
         instance.user = user
         instance.save()
+        user.save()
+
+    else:
+        user = instance.user
+        user.email = instance.email
+        user.username = instance.email
         user.save()

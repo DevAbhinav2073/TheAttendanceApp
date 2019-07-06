@@ -27,8 +27,8 @@ class RoutineDetail(models.Model):
     room = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
-        return 'Routine of day %s of week of teacher %s from %s to %s' % (
-            self.day_of_week, self.teacher, str(self.from_time), str(self.to_time))
+        return 'Routine of day %s of week from %s to %s' % (
+            self.day_of_week, str(self.from_time), str(self.to_time))
 
     class Meta:
         ordering = ('from_time', 'to_time',)

@@ -16,5 +16,5 @@ def manage_email():
             user.user_type = USER_TYPE_STUDENT
             user.username = detail.email
             user.save()
-    except:
-        pass
+    except Exception as e:
+        print(e)

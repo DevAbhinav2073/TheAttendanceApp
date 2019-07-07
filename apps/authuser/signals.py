@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
 from apps.authuser.models import StudentDetail, TeacherDetail
+from apps.constants import USER_TYPE_STUDENT, USER_TYPE_TEACHER
 
 User = get_user_model()
 
@@ -29,6 +30,7 @@ def create_student_user(sender, instance, created, *args, **kwargs):
         password = get_random_password()
         instance.password = password
         user.set_password(password)
+        user.user_type = USER_TYPE_STUDENT
         instance.user = user
         instance.save()
         user.save()
@@ -47,6 +49,7 @@ def create_teacher_user(sender, instance, created, *args, **kwargs):
         password = get_random_password()
         instance.password = password
         user.set_password(password)
+        user.user_type = USER_TYPE_TEACHER
         instance.user = user
         instance.save()
         user.save()

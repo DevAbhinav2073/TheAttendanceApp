@@ -57,6 +57,7 @@ class TeacherDetail(models.Model):
     phone = models.CharField(max_length=14, blank=True, null=True)
     is_full_timer = models.BooleanField(default=True)
     subjects = models.CharField(max_length=100, null=True)
+    password = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -79,11 +80,12 @@ class StudentDetail(models.Model):
     current_part = models.CharField(max_length=5, choices=PART_CHOICES)
     group = models.CharField(max_length=1, choices=GROUP_CHOICES)
     is_class_representative = models.BooleanField(default=False)
+    password = models.CharField(max_length=50, blank=True, null=True)
 
     def clean(self):
         super().clean()
         if self.is_class_representative and not self.phone:
-            raise ValidationError({'phone':'A CR must have a phone number'})
+            raise ValidationError({'phone': 'A CR must have a phone number'})
 
     def __str__(self):
         return self.name

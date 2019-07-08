@@ -43,11 +43,15 @@ class NewUserAdmin(UserAdmin):
 
 
 class StudentDetailAdmin(admin.ModelAdmin):
-    exclude = ('user', )
+    exclude = ('user',)
+    list_display = ('name', 'email', 'phone', 'password', 'batch',
+                    'programme', 'roll_number', 'current_year', 'current_part',
+                    'group', 'password')
 
 
 class TeacherDetailAdmin(admin.ModelAdmin):
-    exclude = ('user', )
+    exclude = ('user',)
+    list_display = ('name', 'email', 'phone', 'subjects', 'password')
 
 
 admin.site.register(StudentDetail, StudentDetailAdmin)

@@ -12,11 +12,28 @@ class GetRoutineView(ListAPIView):
     serializer_class = RoutineDetailSerializer
     queryset = RoutineDetail.objects.all()
 
+    def get_serializer_context(self):
+        return {
+            'date': self.date
+        }
+
     def get_queryset(self):
-        date_str = self.request.GET.get('date', str(datetime.now().date()))
+        date_str = self.request.GET.get('date', str(
+            datetime.now().date()))  # converting date to string, so that both the values are of same datatype
+        is_corrected = self.request.GET.get('corrected', '0')
+        try:
+            is_corrected = int(is_corrected)
+            is_corrected = bool(is_corrected)
+        except:
+            pass
+        # converting string to date object
         date = parse_date(date_str)
         week_day = date.weekday()
-        week_day = (week_day+1) % 7
+        self.date = date
+        self.is_corrected = is_corrected
+        # For international calender, first day of week is Monday, but for nepal it is Sunday
+        week_day = (week_day + 1) % 7
+        print(week_day)
         if self.request.user.is_student and hasattr(self.request.user, 'student_detail'):
             current_year = self.request.user.student_detail.current_year
             current_part = self.request.user.student_detail.current_part

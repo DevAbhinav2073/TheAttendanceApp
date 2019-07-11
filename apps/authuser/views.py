@@ -19,6 +19,7 @@ User = get_user_model()
 
 
 def is_end_of_semester(date=datetime.now().date()):
+    return True
     nep_date_string = '%d-%d-%d' % (2070, 7, 1)  # kartik 1 start of semester
     en_date_object = convert_to_english(nep_date_string)
     # days_difference = en_date_object_now - en_date_object
@@ -79,7 +80,7 @@ class FeedbackViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         date = request.GET.get('date', str(datetime.now().date()))
         date = timestring.Date(date).date.date()
-        if is_end_of_semester(date):
+        if not is_end_of_semester(date):
             return Response({
                 'detail': 'Cannot accept feedback now'
             })

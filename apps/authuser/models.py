@@ -4,6 +4,7 @@ from django.db import models
 
 # Create your models here.
 from apps.constants import *
+from apps.date_converter import convert_to_english
 
 
 class User(AbstractUser):
@@ -76,8 +77,6 @@ class StudentDetail(models.Model):
     batch = models.CharField(max_length=10, choices=BATCH_CHOICES)
     programme = models.ForeignKey('information.Programme', on_delete=models.CASCADE)
     roll_number = models.IntegerField()
-    current_year = models.CharField(max_length=5, choices=YEAR_CHOICES)
-    current_part = models.CharField(max_length=5, choices=PART_CHOICES)
     group = models.CharField(max_length=1, choices=GROUP_CHOICES)
     is_class_representative = models.BooleanField(default=False)
     password = models.CharField(max_length=50, blank=True, null=True)
@@ -87,5 +86,32 @@ class StudentDetail(models.Model):
         if self.is_class_representative and not self.phone:
             raise ValidationError({'phone': 'A CR must have a phone number'})
 
+    @property
+    def date_difference(self):
+        nep_date_string = '%s-%d-%d' % (self.batch, 7, 1)
+        en_date_object = convert_to_english(nep_date_string)
+        days_difference = datetime.now().date() - en_date_object
+        return days_difference.days
+
+    @property
+    def current_year(self):
+        year = ['I', 'II', 'III', 'IV', 'V']
+        for i in range(1, 6):
+            if self.date_difference in range(0, 365 * i):
+                return year[i - 1]
+        return 'None'
+
+    @property
+    def current_part(self):
+        year = ['I', 'II']
+        for i in range(1, 3):
+            if self.date_difference % 365 in range(0, 180 * i):
+                return year[i - 1]
+        return 'None'
+
     def __str__(self):
         return self.name
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print(self.current_year_cal)

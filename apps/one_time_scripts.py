@@ -25,3 +25,7 @@ def manage_email():
             user.save()
     except Exception as e:
         print(e)
+
+
+for s in StudentDetail.objects.all():
+    print(s.name, s.batch, "Year", s.current_year, s.current_year_cal, "Part", s.current_part, s.current_part_cal)

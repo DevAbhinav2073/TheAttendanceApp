@@ -31,6 +31,14 @@ class NewUserAdmin(UserAdmin):
             'fields': ('username', 'password1', 'password2', 'user_type'),
         }),
     )
+    list_display = ('username', 'password_text')
+
+    def password_text(self, obj):
+        if hasattr(obj, 'student_detail'):
+            return obj.student_detail.password
+        elif hasattr(obj, 'teacher_detail'):
+            return obj.teacher_detail.password
+
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
         model_object = self.get_object(request, object_id)
@@ -44,9 +52,9 @@ class NewUserAdmin(UserAdmin):
 
 class StudentDetailAdmin(admin.ModelAdmin):
     exclude = ('user',)
-    list_display = ('name', 'email', 'phone', 'password', 'batch',
+    list_display = ('name', 'email', 'password', 'phone', 'batch',
                     'programme', 'roll_number', 'current_year', 'current_part',
-                    'group', 'password')
+                    'group',)
 
 
 class TeacherDetailAdmin(admin.ModelAdmin):

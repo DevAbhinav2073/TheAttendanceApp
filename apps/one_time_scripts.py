@@ -14,6 +14,8 @@ def manage_email():
             user.set_password(password)
             detail.password = password
             user.save()
+            detail.save()
+            print(user.username, password)
         for detail in StudentDetail.objects.all():
             user = detail.user
             user.email = detail.email
@@ -23,9 +25,7 @@ def manage_email():
             user.set_password(password)
             detail.password = password
             user.save()
+            detail.save()
+            print(user.username, password)
     except Exception as e:
         print(e)
-
-
-for s in StudentDetail.objects.all():
-    print(s.name, s.batch, "Year", s.current_year, s.current_year_cal, "Part", s.current_part, s.current_part_cal)

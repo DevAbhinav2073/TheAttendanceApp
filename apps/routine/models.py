@@ -77,3 +77,4 @@ class ClassAttendingDetail(models.Model):
 
     def __str__(self):
         return 'Attending detail of %s' % (self.routine_detail,)
+

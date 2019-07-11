@@ -22,6 +22,14 @@ class RoutineDetailSerializer(serializers.ModelSerializer):
     corrected_to_time = serializers.SerializerMethodField()
     is_attending = serializers.SerializerMethodField()
     is_cancelled = serializers.SerializerMethodField()
+    teachers = serializers.SerializerMethodField()
+
+    def get_teachers(self, obj):
+        teacher_name_list = []
+        for teacher in obj.teachers.all():
+            if hasattr(teacher, 'teacher_detail'):
+                teacher_name_list.append(teacher.teacher_detail.name)
+        return ', '.join(teacher_name_list)
 
     def get_is_attending(self, obj):
         return obj.is_attending(self.date)
@@ -53,4 +61,3 @@ class ClassAttendingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassAttendingDetail
         fields = '__all__'
-

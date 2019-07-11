@@ -112,6 +112,15 @@ class StudentDetail(models.Model):
     def __str__(self):
         return self.name
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        print(self.current_year_cal)
+
+class Feedback(models.Model):
+    review = models.TextField()
+    teacher = models.ForeignKey('authuser.Teacher', related_name='review_teacher', null=True, on_delete=models.SET_NULL)
+    feedback_by = models.ForeignKey('authuser.Student', related_name='review_student', null=True,
+                                  on_delete=models.SET_NULL)
+    datetime_created = models.DateTimeField(auto_now_add=True)
+    datetime_updated = models.DateTimeField(auto_now=True)
+    questionnaire = models.TextField(null=True)
+
+    def __str__(self):
+        return 'Feedback for %s' % (self.teacher,)

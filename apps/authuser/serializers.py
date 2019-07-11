@@ -36,7 +36,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'username', 'first_name', 'last_name', 'email', 'user_type', 'token', 'student_detail', 'teacher_detail')
+            'username', 'user_type', 'token', 'student_detail', 'teacher_detail')
         extra_kwargs = {
             'password': {
                 'write_only': True
@@ -48,3 +48,12 @@ class UserSerializer(serializers.ModelSerializer):
                 'read_only': True
             }
         }
+
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feedback
+        fields = '__all__'
+
+
+

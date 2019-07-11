@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from apps.routine.models import Routine, RoutineDetail
+from apps.routine.models import Routine, RoutineDetail, ClassAttendingDetail
 
 
 class RoutineAdmin(admin.ModelAdmin):
@@ -13,5 +13,10 @@ class RoutineDetailAdmin(admin.ModelAdmin):
     filter_horizontal = ('teachers',)
 
 
+class ClassAttendingDetailAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(ClassAttendingDetail, ClassAttendingDetailAdmin)
 admin.site.register(Routine, RoutineAdmin)
 admin.site.register(RoutineDetail, RoutineDetailAdmin)

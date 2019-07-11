@@ -2,10 +2,22 @@ from datetime import datetime
 
 from django.utils.dateparse import parse_date
 # Create your views here.
+from rest_framework import status
 from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
-from apps.routine.models import RoutineDetail, Routine
-from apps.routine.serializers import RoutineDetailSerializer
+from apps.routine.models import RoutineDetail, Routine, ClassAttendingDetail
+from apps.routine.serializers import RoutineDetailSerializer, ClassAttendingSerializer
+
+
+def get_corrected_queryset(queryset, date):
+    for obj in queryset:
+        extra_details = ClassAttendingDetail.objects.filter(routine_detail=obj, date=date)
+        if extra_details.exists():
+            extra_detail = extra_details.first()
+            obj.from_time = extra_detail.from_time
+            obj.to_time = extra_detail.to_time
 
 
 class GetRoutineView(ListAPIView):
@@ -33,7 +45,6 @@ class GetRoutineView(ListAPIView):
         self.is_corrected = is_corrected
         # For international calender, first day of week is Monday, but for nepal it is Sunday
         week_day = (week_day + 1) % 7
-        print(week_day)
         if self.request.user.is_student and hasattr(self.request.user, 'student_detail'):
             current_year = self.request.user.student_detail.current_year
             current_part = self.request.user.student_detail.current_part
@@ -48,3 +59,20 @@ class GetRoutineView(ListAPIView):
 
             return routine_details
         return self.queryset.none()
+
+
+class ClassAttendingViewSet(ModelViewSet):
+    serializer_class = ClassAttendingSerializer
+    queryset = ClassAttendingDetail.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        data['teacher'] = str(request.user.id)
+        serialized = ClassAttendingSerializer(data=data)
+        if serialized.is_valid(raise_exception=True):
+            date = serialized.validated_data.get('date')
+            routine_of = serialized.validated_data.get('routine_detail')
+            ClassAttendingDetail.objects.filter(date=date, routine_detail=routine_of).delete()
+            instance = serialized.save()
+            headers = self.get_success_headers(serialized.data)
+            return Response(serialized.data, status=status.HTTP_201_CREATED, headers=headers)

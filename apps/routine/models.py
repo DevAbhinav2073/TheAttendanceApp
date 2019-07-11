@@ -31,7 +31,30 @@ class RoutineDetail(models.Model):
             self.day_of_week, str(self.from_time), str(self.to_time))
 
     def has_corrected_detail(self, date):
-        return ClassAttendingDetail.objects.filter(date=date, routine_detail=self).exists()
+        queryset = ClassAttendingDetail.objects.filter(date=date, routine_detail=self)
+        has_corrected_detail = queryset.exists()
+        self.corrected_info = queryset.first()
+        return has_corrected_detail
+
+    def corrected_from_time(self, date):
+        if self.has_corrected_detail(date):
+            return self.corrected_info.from_time
+        return self.from_time
+
+    def corrected_to_time(self, date):
+        if self.has_corrected_detail(date):
+            return self.corrected_info.to_time
+        return self.to_time
+
+    def is_cancelled(self, date):
+        if self.has_corrected_detail(date):
+            return self.corrected_info.is_cancelled
+        return False
+
+    def is_attending(self, date):
+        if self.has_corrected_detail(date):
+            return self.corrected_info.is_attending
+        return True
 
     class Meta:
         ordering = ('from_time', 'to_time',)
@@ -43,16 +66,14 @@ class ClassAttendingDetail(models.Model):
     teacher = models.ForeignKey('authuser.Teacher', on_delete=models.CASCADE)
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_update = models.DateTimeField(auto_now=True)
-    remark = models.CharField(max_length=150, null=True)
+    remark = models.CharField(max_length=150, null=True, blank=True)
     send_sms = models.BooleanField(default=True)
     date = models.DateField()
-    from_time = models.TimeField(null=True)
-    to_time = models.TimeField(null=True)
-    is_attending = models.BooleanField(default=True)
-    is_permanent = models.BooleanField(default=False)
-    is_cancelled = models.BooleanField(default=False)
+    from_time = models.TimeField(null=True, blank=True)
+    to_time = models.TimeField(null=True, blank=True)
+    is_attending = models.BooleanField(default=True)  # to know if the teacher is attending or not
+    is_permanent = models.BooleanField(default=False)  # to change the default routine
+    is_cancelled = models.BooleanField(default=False)  # to cancel a class
 
     def __str__(self):
         return 'Attending detail of %s' % (self.routine_detail,)
-
-

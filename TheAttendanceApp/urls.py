@@ -16,9 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
+from rest_framework.routers import DefaultRouter
 
 from apps.authuser.views import LoginAPIView
-from apps.routine.views import GetRoutineView
+from apps.routine.views import GetRoutineView, ClassAttendingViewSet
+
+router = DefaultRouter()
+router.register('class-attending-detail', ClassAttendingViewSet)
 
 urlpatterns = [
     path('', RedirectView.as_view(url='admin/')),
@@ -28,6 +32,6 @@ urlpatterns = [
     path('api/rest-auth/', include('rest_auth.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('api/rest-auth/', include('rest_auth.urls')),
-
+    path('api/', include(router.urls)),
 
 ]

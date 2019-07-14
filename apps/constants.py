@@ -26,3 +26,12 @@ DAY_LIST = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'S
 
 DAY_OF_WEEK_CHOICES_TUPLE = [(idx, value) for idx, value in enumerate(DAY_LIST)]
 
+# Student fields
+NAME_FIELD = 'Name'
+EMAIL_FIELD = 'Email'
+GROUP_FIELD = 'Group'
+PHONE_FIELD = 'Phone'
+ROLL_NUMBER_FIELD = 'Roll number'
+
+
+# Teacher Fields

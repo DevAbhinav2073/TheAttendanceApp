@@ -56,6 +56,14 @@ class RoutineDetail(models.Model):
             return self.corrected_info.is_attending
         return True
 
+    @property
+    def teachers_name(self):
+        teacher_name_list = []
+        for teacher in self.teachers.all():
+            if hasattr(teacher, 'teacher_detail'):
+                teacher_name_list.append(teacher.teacher_detail.name)
+        return ', '.join(teacher_name_list)
+
     class Meta:
         ordering = ('from_time', 'to_time',)
 
@@ -67,14 +75,46 @@ class ClassAttendingDetail(models.Model):
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_update = models.DateTimeField(auto_now=True)
     remark = models.CharField(max_length=150, null=True, blank=True)
-    send_sms = models.BooleanField(default=True)
+    send_sms = models.BooleanField(default=False)
     date = models.DateField()
     from_time = models.TimeField(null=True, blank=True)
     to_time = models.TimeField(null=True, blank=True)
     is_attending = models.BooleanField(default=True)  # to know if the teacher is attending or not
     is_permanent = models.BooleanField(default=False)  # to change the default routine
     is_cancelled = models.BooleanField(default=False)  # to cancel a class
+    notify = models.BooleanField(default=True)
 
     def __str__(self):
         return 'Attending detail of %s' % (self.routine_detail,)
 
+
+class SMSCredit(models.Model):
+    credit_count = models.IntegerField(default=5)
+
+    @staticmethod
+    def has_credit():
+        try:
+            return SMSCredit.objects.all().first().credit_count > 0
+        except:
+            return False
+
+    @staticmethod
+    def deduct_credit(num: int):
+        try:
+            instance = SMSCredit.objects.all().first()
+            instance.credit_count = instance.credit_count - num
+            instance.save()
+        except:
+            pass
+
+    @staticmethod
+    def add_credit(num: int):
+        try:
+            instance = SMSCredit.objects.all().first()
+            instance.credit_count = instance.credit_count + num
+            instance.save()
+        except:
+            pass
+
+    def __str__(self):
+        return str(self.credit_count)

@@ -49,16 +49,25 @@ class Teacher(User):
         proxy = True
 
 
+class Department(models.Model):
+    name = models.CharField(max_length=50, )
+
+    def __str__(self):
+        return self.name
+
+
 class TeacherDetail(models.Model):
     user = models.OneToOneField('authuser.User', limit_choices_to={
         'user_type': USER_TYPE_TEACHER
     }, null=True, related_name='teacher_detail', on_delete=models.CASCADE)
     name = models.CharField(max_length=50, default='')
     email = models.EmailField()
+    short_name = models.CharField(max_length=50, null=True)
     phone = models.CharField(max_length=14, blank=True, null=True)
     is_full_timer = models.BooleanField(default=True)
     subjects = models.CharField(max_length=100, null=True)
     password = models.CharField(max_length=50, blank=True, null=True)
+    department = models.ForeignKey('authuser.Department', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
@@ -117,7 +126,7 @@ class Feedback(models.Model):
     review = models.TextField()
     teacher = models.ForeignKey('authuser.Teacher', related_name='review_teacher', null=True, on_delete=models.SET_NULL)
     feedback_by = models.ForeignKey('authuser.Student', related_name='review_student', null=True,
-                                  on_delete=models.SET_NULL)
+                                    on_delete=models.SET_NULL)
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_updated = models.DateTimeField(auto_now=True)
     questionnaire = models.TextField(null=True)

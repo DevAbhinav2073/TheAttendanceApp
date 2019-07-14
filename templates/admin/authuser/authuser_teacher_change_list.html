@@ -1,0 +1,18 @@
+{% extends 'admin/change_list.html' %}
+
+{% block object-tools %}
+<ul class="object-tools">
+    {% block object-tools-items %}
+    {{ block.super }}
+    {% endblock %}
+    <li>
+
+        <a href="{% url 'admin:handle-teacher-csv-upload' %}">
+        Import Teacher
+        </a>
+        <a href="/media/file-samples/teachers_detail.csv">
+        Download file sample
+        </a>
+    </li>
+</ul>
+{% endblock %}

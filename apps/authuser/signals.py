@@ -28,7 +28,7 @@ def send_account_creation_email(detail):
     # create the email, and attach the HTML version as well.
     msg = EmailMultiAlternatives(subject, text_content, from_email, [detail.email, ])
     msg.attach_alternative(html_content, "text/html")
-    msg.send()
+    # msg.send()
 
 def get_random_password():
     pw = randint(100000, 999999)

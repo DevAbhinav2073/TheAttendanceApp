@@ -40,6 +40,8 @@ class NewUserAdmin(UserAdmin):
         }),
     )
     list_display = ('username', 'password_text')
+    list_filter = ('user_type',)
+    search_fields = ('username', 'email',)
 
     def password_text(self, obj):
         if hasattr(obj, 'student_detail'):
@@ -84,6 +86,7 @@ class StudentDetailAdmin(admin.ModelAdmin):
             roll_number = row.get(ROLL_NUMBER_FIELD)
             phone = row.get(PHONE_FIELD, None)
             group = row.get(GROUP_FIELD)
+            print(name, email, roll_number, phone, group)
 
             try:
                 student_detail = StudentDetail.objects.create(email=email,
@@ -95,6 +98,7 @@ class StudentDetailAdmin(admin.ModelAdmin):
                                                               phone=phone)
                 list_of_created_username.append(email)
             except IntegrityError as e:
+                print(e, name, email, roll_number, phone, group)
                 for username in list_of_created_username:
                     User.objects.get(username=username).delete()
                 raise IntegrityError(

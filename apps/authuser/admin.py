@@ -63,7 +63,8 @@ class StudentDetailAdmin(admin.ModelAdmin):
     exclude = ('user',)
     list_display = ('name', 'email', 'password', 'phone', 'batch',
                     'programme', 'roll_number', 'current_year', 'current_part',
-                    'group',)
+                    'group', 'is_class_representative')
+    list_filter = ('group', 'batch', 'programme', 'is_class_representative')
     change_list_template = 'admin/authuser/authuser_student_change_list.html'
 
     def get_urls(self, *args, **kwargs):

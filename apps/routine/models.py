@@ -118,7 +118,7 @@ class SMSCredit(models.Model):
             pass
 
     @staticmethod
-    def credit_count(num: int):
+    def show_credit_count():
         try:
             instance = SMSCredit.objects.all().first()
             return instance.credit_count

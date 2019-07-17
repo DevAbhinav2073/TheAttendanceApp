@@ -13,7 +13,6 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.authuser.forms import DetailsForUploadingStudentCSVForm, DetailsForUploadingTeacherCSVForm
 from apps.authuser.models import *
-from apps.csv_uploader.admin import CsvUploadAdmin
 
 User = get_user_model()
 

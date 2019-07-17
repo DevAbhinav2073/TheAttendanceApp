@@ -190,7 +190,7 @@ class TeacherDetailAdmin(admin.ModelAdmin):
         )
 
 
-class DepartmentAdmin(CsvUploadAdmin):
+class DepartmentAdmin(admin.ModelAdmin):
     allow_csv_upload = True
 
 

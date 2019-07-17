@@ -117,5 +117,13 @@ class SMSCredit(models.Model):
         except:
             pass
 
+    @staticmethod
+    def credit_count(num: int):
+        try:
+            instance = SMSCredit.objects.all().first()
+            return instance.credit_count
+        except:
+            pass
+
     def __str__(self):
         return str(self.credit_count)

@@ -83,6 +83,7 @@ class ClassAttendingDetail(models.Model):
     is_permanent = models.BooleanField(default=False)  # to change the default routine
     is_cancelled = models.BooleanField(default=False)  # to cancel a class
     notify = models.BooleanField(default=True)
+    allow_csv_upload = True
 
     def __str__(self):
         return 'Attending detail of %s' % (self.routine_detail,)

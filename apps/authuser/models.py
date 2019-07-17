@@ -51,6 +51,7 @@ class Teacher(User):
 
 class Department(models.Model):
     name = models.CharField(max_length=50, )
+    allow_import_csv = True
 
     def __str__(self):
         return self.name

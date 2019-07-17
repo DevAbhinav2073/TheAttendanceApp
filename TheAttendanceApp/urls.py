@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
@@ -21,24 +22,23 @@ from rest_framework.routers import DefaultRouter
 
 from apps.authuser.views import LoginAPIView, get_own_detail, can_send_feedback, FeedbackViewSet
 from apps.routine.views import GetRoutineView, ClassAttendingViewSet
-from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register('class-attending-detail', ClassAttendingViewSet)
 router.register('feedback', FeedbackViewSet)
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='admin/')),
-    path('admin/', admin.site.urls),
-    path('api/login/', LoginAPIView.as_view(), name='login'),
-    path('api/get_own_detail/', get_own_detail, name='get_own_detail'),
-    path('api/get_routine/', GetRoutineView.as_view(), name='get_routine'),
-    path('api/can_send_feedback/', can_send_feedback, name='can_send_feedback'),
-    path('api-auth/', include('rest_framework.urls')),
-    path('api/rest-auth/', include('rest_auth.urls')),
-    path('api/', include(router.urls)),
+                  path('', RedirectView.as_view(url='admin/')),
+                  path('admin/', admin.site.urls),
+                  path('api/login/', LoginAPIView.as_view(), name='login'),
+                  path('api/get_own_detail/', get_own_detail, name='get_own_detail'),
+                  path('api/get_routine/', GetRoutineView.as_view(), name='get_routine'),
+                  path('api/can_send_feedback/', can_send_feedback, name='can_send_feedback'),
+                  path('api-auth/', include('rest_framework.urls')),
+                  path('api/rest-auth/', include('rest_auth.urls')),
+                  path('api/', include(router.urls)),
+                  path('csv_uploader/', include('apps.csv_uploader.urls'))
 
-]\
+              ] \
               + static('static', document_root=settings.STATIC_ROOT) \
               + static('media', document_root=settings.MEDIA_ROOT)
-

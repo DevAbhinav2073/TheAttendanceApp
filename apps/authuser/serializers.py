@@ -19,6 +19,12 @@ class StudentDetailSerializer(serializers.ModelSerializer):
 
 
 class TeacherDetailSerializer(serializers.ModelSerializer):
+    department_name = serializers.SerializerMethodField()
+
+    def get_department(self, obj):
+        if obj.department:
+            return obj.department.name
+
     class Meta:
         model = TeacherDetail
         exclude = ()
@@ -54,6 +60,3 @@ class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = '__all__'
-
-
-

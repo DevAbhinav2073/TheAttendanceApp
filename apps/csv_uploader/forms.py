@@ -1,6 +1,7 @@
 import io
 
 from django import forms
+from django.db.models import ForeignKey
 
 from .utils import get_required_fields
 
@@ -25,11 +26,23 @@ def validate_file_for_fields(required_fields):
 
 
 class CSVUploadForm(forms.Form):
-    csv_file = forms.FileField()
 
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop('model')
         super().__init__(*args, **kwargs)
+
+        all_model_fields = self.model._meta.get_fields()
+        all_fk_model_fields = []
+        all_non_fk_model_fields = []
+        for field in all_model_fields:
+            if isinstance(self.model._meta.get_field(field.name), ForeignKey):
+                all_fk_model_fields.append(field.name)
+            else:
+                all_non_fk_model_fields.append(field.name)
+        for field in all_fk_model_fields:
+            model = self.model._meta.get_field(field).remote_field.model
+            self.fields[field] = forms.ModelChoiceField(queryset=model.objects.all())
+        self.fields['csv_file'] = forms.FileField()
         required_fields = get_required_fields(self.model)
         self.fields['csv_file'].help_text = 'Required field(s) is/are: %s' % (', '.join(required_fields, ))
         self.fields['csv_file'].validators = [validate_file_for_fields(required_fields), ]

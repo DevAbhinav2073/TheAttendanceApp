@@ -1,0 +1,22 @@
+[
+ {
+    "model": "routine.semesterdetail",
+    "pk": 1,
+    "fields": {
+      "year": "2076",
+      "part": "2",
+      "from_date": "2019-02-02",
+      "to_date": "2019-07-02"
+    }
+  },
+  {
+    "model": "routine.semesterdetail",
+    "pk": 2,
+    "fields": {
+      "year": "2076",
+      "part": "2",
+      "from_date": "2019-02-02",
+      "to_date": "2019-07-02"
+    }
+  }
+]

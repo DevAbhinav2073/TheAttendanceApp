@@ -24,6 +24,7 @@ def send_email(subject, template, context, to_emails):
 
 
 def send_sms(number, text, footnote):
+    return
     if not SMSCredit.has_credit():
         return
     url = "http://api.sparrowsms.com/v2/sms/"

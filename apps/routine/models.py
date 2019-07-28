@@ -23,7 +23,7 @@ class RoutineDetail(models.Model):
     from_time = models.TimeField(default=datetime.now)
     to_time = models.TimeField(default=datetime.now)
     subject = models.CharField(max_length=100, blank=True, null=True,
-                               help_text='Can be anything like break presentation etc, not necesserily a subject from syllabus')
+                               help_text='Can be anything like break, presentation etc, not necesserily a subject from syllabus')
     room = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
@@ -87,6 +87,28 @@ class ClassAttendingDetail(models.Model):
 
     def __str__(self):
         return 'Attending detail of %s' % (self.routine_detail,)
+
+
+class ArrivalTime(models.Model):
+    routine_detail = models.ForeignKey(RoutineDetail, on_delete=models.CASCADE)
+    date = models.DateField()
+    arrival_time = models.TimeField()
+
+    def __str__(self):
+        return 'Arrival time of %s on %s' % (self.routine_detail.teachers_name, self.date)
+
+
+class SemesterDetail(models.Model):
+    year = models.CharField(choices=BATCH_CHOICES, max_length=5)
+    part = models.CharField(choices=PART_CHOICES, max_length=2)
+    from_date = models.DateField()
+    to_date = models.DateField()
+
+    def __str__(self):
+        return '%s part of year %s  is from %s to %s' % (self.part, self.year, self.from_date, self.to_date)
+
+    class Meta:
+        ordering = ('-id',)
 
 
 class SMSCredit(models.Model):

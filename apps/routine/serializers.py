@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from apps.constants import DAY_LIST
 from apps.information.serializers import ProgrammeSerializer
-from apps.routine.models import RoutineDetail, Routine, ClassAttendingDetail
+from apps.routine.models import RoutineDetail, Routine, ClassAttendingDetail, ArrivalTime
 
 
 class RoutineSerializer(serializers.ModelSerializer):
@@ -56,4 +56,10 @@ class RoutineDetailSerializer(serializers.ModelSerializer):
 class ClassAttendingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassAttendingDetail
+        fields = '__all__'
+
+
+class ArrivalTimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArrivalTime
         fields = '__all__'

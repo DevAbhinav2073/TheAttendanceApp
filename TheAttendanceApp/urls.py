@@ -21,10 +21,11 @@ from django.views.generic import RedirectView
 from rest_framework.routers import DefaultRouter
 
 from apps.authuser.views import LoginAPIView, get_own_detail, can_send_feedback, FeedbackViewSet
-from apps.routine.views import GetRoutineView, ClassAttendingViewSet
+from apps.routine.views import GetRoutineView, ClassAttendingViewSet, get_stats, ArrivalTimeViewSet
 
 router = DefaultRouter()
 router.register('class-attending-detail', ClassAttendingViewSet)
+router.register('arrival-time-detail', ArrivalTimeViewSet)
 router.register('feedback', FeedbackViewSet)
 
 urlpatterns = [
@@ -37,7 +38,8 @@ urlpatterns = [
                   path('api-auth/', include('rest_framework.urls')),
                   path('api/rest-auth/', include('rest_auth.urls')),
                   path('api/', include(router.urls)),
-                  path('csv_uploader/', include('apps.csv_uploader.urls'))
+                  path('api/get_stats/<int:teacher_id>/', get_stats, name='get_stats_ac_teacher'),
+                  path('csv_uploader/', include('apps.csv_uploader.urls')),
 
               ] \
               + static('static', document_root=settings.STATIC_ROOT) \

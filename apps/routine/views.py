@@ -1,14 +1,18 @@
 from datetime import datetime
 
+from django.contrib.auth import get_user_model
 from django.utils.dateparse import parse_date
 # Create your views here.
 from rest_framework import status
-from rest_framework.generics import ListAPIView
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import ListAPIView, get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from apps.routine.models import RoutineDetail, Routine, ClassAttendingDetail
-from apps.routine.serializers import RoutineDetailSerializer, ClassAttendingSerializer
+from apps.routine.models import RoutineDetail, Routine, ClassAttendingDetail, ArrivalTime
+from apps.routine.serializers import RoutineDetailSerializer, ClassAttendingSerializer, ArrivalTimeSerializer
+from apps.routine.utils import get_current_semester
 
 
 def get_corrected_queryset(queryset, date):
@@ -76,3 +80,45 @@ class ClassAttendingViewSet(ModelViewSet):
             instance = serialized.save()
             headers = self.get_success_headers(serialized.data)
             return Response(serialized.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class ArrivalTimeViewSet(ModelViewSet):
+    serializer_class = ArrivalTimeSerializer
+    queryset = ArrivalTime.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+        serialized = ArrivalTimeSerializer(data=data)
+        if serialized.is_valid(raise_exception=True):
+            date = serialized.validated_data.get('date')
+            routine_of = serialized.validated_data.get('routine_detail')
+            ArrivalTime.objects.filter(date=date, routine_detail=routine_of).delete()
+            instance = serialized.save()
+            headers = self.get_success_headers(serialized.data)
+            return Response(serialized.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+User = get_user_model()
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, ])
+def get_stats(request, teacher_id):
+    teacher = get_object_or_404(User.objects.all(), id=teacher_id)
+    year = request.GET.get('year', None)
+    part = request.GET.get('part', None)
+    current_semester = get_current_semester(year, part)
+    routine_alter_detail_of_this_teacher = ClassAttendingDetail.objects.filter(teacher=teacher,
+                                                                               date__lte=current_semester.to_date,
+                                                                               date__gte=current_semester.from_date)
+    arrival_time_detail_of_this_teacher = ArrivalTime.objects.filter(routine_detail__teachers=teacher,
+                                                                     date__lte=current_semester.to_date,
+                                                                     date__gte=current_semester.from_date)
+    cancelled_count = routine_alter_detail_of_this_teacher.filter(is_cancelled=True).count()
+    not_attended_count = routine_alter_detail_of_this_teacher.filter(is_attending=False).count()
+    arrived_late_count = arrival_time_detail_of_this_teacher.count()
+    return Response({
+        'cancelled': cancelled_count,
+        'not_attended': not_attended_count,
+        'arrived_late': arrived_late_count
+    })

@@ -30,6 +30,7 @@ def send_account_creation_email(detail):
     msg.attach_alternative(html_content, "text/html")
     # msg.send()
 
+
 def get_random_password():
     pw = randint(100000, 999999)
     return str(pw)
@@ -43,7 +44,7 @@ def create_auth_token(sender, instance, created, *args, **kwargs):
 
 @receiver(post_save, sender=StudentDetail)
 def create_student_user(sender, instance, created, *args, **kwargs):
-    if created:
+    if created and not instance.user:
         user = User.objects.create(username=instance.email)
         user.email = instance.email
         password = get_random_password()
@@ -63,7 +64,7 @@ def create_student_user(sender, instance, created, *args, **kwargs):
 
 @receiver(post_save, sender=TeacherDetail)
 def create_teacher_user(sender, instance, created, *args, **kwargs):
-    if created:
+    if created and not instance.user:
         user = User.objects.create(username=instance.email)
         user.email = instance.email
         password = get_random_password()

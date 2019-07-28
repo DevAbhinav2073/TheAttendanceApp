@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from apps.routine.models import Routine, RoutineDetail, ClassAttendingDetail
+from apps.routine.models import Routine, RoutineDetail, ClassAttendingDetail, ArrivalTime, SemesterDetail
 
 
 class RoutineAdmin(admin.ModelAdmin):
@@ -17,6 +17,16 @@ class ClassAttendingDetailAdmin(admin.ModelAdmin):
     pass
 
 
+class ArrivalTimeAdmin(admin.ModelAdmin):
+    pass
+
+
+class SemesterDetailAdmin(admin.ModelAdmin):
+    pass
+
+
+admin.site.register(SemesterDetail, SemesterDetailAdmin)
 admin.site.register(ClassAttendingDetail, ClassAttendingDetailAdmin)
 admin.site.register(Routine, RoutineAdmin)
 admin.site.register(RoutineDetail, RoutineDetailAdmin)
+admin.site.register(ArrivalTime, ArrivalTimeAdmin)

@@ -21,13 +21,14 @@ from django.views.generic import RedirectView
 from rest_framework.routers import DefaultRouter
 
 from apps.authuser.views import LoginAPIView, get_own_detail, can_send_feedback, FeedbackViewSet, get_list_of_teachers
+from apps.information.views import NoticeViewSet
 from apps.routine.views import GetRoutineView, ClassAttendingViewSet, get_stats, ArrivalTimeViewSet
 
 router = DefaultRouter()
 router.register('class-attending-detail', ClassAttendingViewSet)
 router.register('arrival-time-detail', ArrivalTimeViewSet)
 router.register('feedback', FeedbackViewSet)
-router.register('notice', FeedbackViewSet)
+router.register('notice', NoticeViewSet)
 
 urlpatterns = [
                   path('', RedirectView.as_view(url='admin/')),

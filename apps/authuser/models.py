@@ -16,6 +16,13 @@ class User(AbstractUser):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def get_full_name(self):
+        if hasattr(self, 'student_detail'):
+            return self.student_detail.name
+        elif hasattr(self, 'teacher_detail'):
+            return self.teacher_detail
+        return super().get_full_name()
+
     @property
     def is_student(self):
         return self.user_type == USER_TYPE_STUDENT

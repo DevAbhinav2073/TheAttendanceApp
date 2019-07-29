@@ -2,11 +2,18 @@ from django.db import models
 
 from apps.constants import *
 
+ODD_EVEN_SEMESTER = (
+    ('I', 'ODD'),
+    ('II', 'EVEN')
+)
+
 
 class Routine(models.Model):
+    batch = models.CharField(max_length=5, choices=BATCH_CHOICES, default='2073')
     programme = models.ForeignKey('information.Programme', on_delete=models.PROTECT)
     year = models.CharField(max_length=5, choices=YEAR_CHOICES)
     part = models.CharField(max_length=5, choices=PART_CHOICES)
+
     group = models.CharField(max_length=1, choices=GROUP_CHOICES)
 
     def __str__(self):
@@ -99,13 +106,13 @@ class ArrivalTime(models.Model):
 
 
 class SemesterDetail(models.Model):
-    year = models.CharField(choices=BATCH_CHOICES, max_length=5)
-    part = models.CharField(choices=PART_CHOICES, max_length=2)
+    academic_year = models.CharField(choices=BATCH_CHOICES, max_length=5)
+    odd_even = models.CharField(choices=ODD_EVEN_SEMESTER, max_length=2, verbose_name='Odd/Even Semester')
     from_date = models.DateField()
     to_date = models.DateField()
 
     def __str__(self):
-        return '%s part of year %s  is from %s to %s' % (self.part, self.year, self.from_date, self.to_date)
+        return '%s part of year %s  is from %s to %s' % (self.part, self.academic_year, self.from_date, self.to_date)
 
     class Meta:
         ordering = ('-id',)

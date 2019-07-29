@@ -24,7 +24,7 @@ def send_email(subject, template, context, to_emails):
 
 
 def send_sms(number, text, footnote):
-    return
+    # return
     if not SMSCredit.has_credit():
         return
     url = "http://api.sparrowsms.com/v2/sms/"
@@ -39,7 +39,7 @@ def send_sms(number, text, footnote):
     }
     # print(message)
     response = requests.request("GET", url, data=payload, headers=headers, params=querystring)
-    credit_used = response.text.get('credit_consumed')
+    credit_used = response.json().get('credit_consumed')
     SMSCredit.deduct_credit(credit_used)
 
 

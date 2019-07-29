@@ -31,7 +31,7 @@ class StudentManager(UserManager):
 
 
 class Student(User):
-    objects = StudentManager
+    objects = StudentManager()
 
     class Meta:
         proxy = True
@@ -43,7 +43,7 @@ class TeacherManager(UserManager):
 
 
 class Teacher(User):
-    objects = TeacherManager
+    objects = TeacherManager()
 
     class Meta:
         proxy = True

@@ -3,7 +3,7 @@ from datetime import datetime
 import timestring
 from django.contrib.auth import get_user_model
 # Create your views here.
-from rest_framework import parsers, renderers
+from rest_framework import parsers, renderers, status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -11,9 +11,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from apps.authuser.models import Feedback
+from apps.authuser.models import Feedback, Teacher
 from apps.authuser.serializers import UserSerializer, convert_to_english, FeedbackSerializer
 from apps.constants import USER_TYPE_TEACHER, USER_TYPE_STUDENT
+from apps.routine.models import Routine, RoutineDetail
 
 User = get_user_model()
 
@@ -85,3 +86,19 @@ class FeedbackViewSet(ModelViewSet):
                 'detail': 'Cannot accept feedback now'
             })
         return super().create(request, *args, **kwargs)
+
+
+@api_view(['GET', ])
+@permission_classes([IsAuthenticated, ])
+def get_list_of_teachers(request):
+    if request.user.is_teacher:
+        return Response({'detail': 'Only available to students'}, status=status.HTTP_400_BAD_REQUEST)
+    if hasattr(request.user, 'student_detail'):
+        year = request.user.student_detail.current_year
+        part = request.user.student_detail.current_part
+        routine = Routine.objects.filter(year=year, part=part)
+        routine_details = RoutineDetail.objects.filter(routine_of__in=routine)
+        teachers = Teacher.objects.filter(routinedetail__in=routine_details)
+        return Response(UserSerializer(teachers, many=True).data, status=status.HTTP_200_OK)
+    else:
+        return Response([], status=status.HTTP_404_NOT_FOUND)

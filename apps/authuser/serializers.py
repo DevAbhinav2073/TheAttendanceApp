@@ -21,7 +21,7 @@ class StudentDetailSerializer(serializers.ModelSerializer):
 class TeacherDetailSerializer(serializers.ModelSerializer):
     department_name = serializers.SerializerMethodField()
 
-    def get_department(self, obj):
+    def get_department_name(self, obj):
         if obj.department:
             return obj.department.name
 
@@ -57,6 +57,21 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
+    teacher_name = serializers.SerializerMethodField()
+    feedback_by_name = serializers.SerializerMethodField()
+
+    def get_teacher_name(self, obj):
+        try:
+            return obj.teacher.teacher_detail.name
+        except:
+            return 'None'
+
+    def get_feedback_by_name(self, obj):
+        try:
+            return obj.feedback_by.student_detail.name
+        except:
+            return 'None'
+
     class Meta:
         model = Feedback
         fields = '__all__'

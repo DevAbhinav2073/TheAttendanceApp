@@ -112,7 +112,7 @@ class SemesterDetail(models.Model):
     to_date = models.DateField()
 
     def __str__(self):
-        return '%s part of year %s  is from %s to %s' % (self.part, self.academic_year, self.from_date, self.to_date)
+        return '%s semester of year %s  is from %s to %s' % (self.odd_even, self.academic_year, self.from_date, self.to_date)
 
     class Meta:
         ordering = ('-id',)

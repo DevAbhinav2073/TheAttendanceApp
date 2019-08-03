@@ -5,10 +5,13 @@ from django.http import HttpResponse
 # Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 
+from apps.im.serializers import MarksDetailSerializer
 from apps.im.utils import get_remark, is_fail
 from apps.im.utils import num2word
-from apps.permissions import is_teacher, is_student
+from apps.permissions import is_teacher, is_student, IsStudent
 from apps.routine.utils import get_roman_value
 from .forms import *
 
@@ -206,3 +209,11 @@ def dept_see_records(request):
 @user_passes_test(is_student)
 def stu_see_records(request):
     return render(request, template_name='im/student/mark_records.html')
+
+
+@api_view(['GET', ])
+@permission_classes([IsStudent, ])
+def get_internal_marks(request):
+    user = request.user.student_detail
+    student_marks = MarksDetail.objects.filter(student=user)
+    return Response(MarksDetailSerializer(student_marks, many=True).data, )

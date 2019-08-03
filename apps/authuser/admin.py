@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.authuser.forms import DetailsForUploadingStudentCSVForm, DetailsForUploadingTeacherCSVForm
 from apps.authuser.models import *
+from apps.csv_uploader.admin import CsvUploadAdmin
 
 User = get_user_model()
 
@@ -59,77 +60,77 @@ class NewUserAdmin(UserAdmin):
         return super().changeform_view(request, object_id, form_url, extra_context)
 
 
-class StudentDetailAdmin(admin.ModelAdmin):
+class StudentDetailAdmin(CsvUploadAdmin):
     exclude = ('user',)
     list_display = ('name', 'email', 'password', 'phone', 'batch',
                     'programme', 'roll_number', 'current_year', 'current_part',
                     'group', 'is_class_representative')
     list_filter = ('group', 'batch', 'programme', 'is_class_representative')
-    change_list_template = 'admin/authuser/authuser_student_change_list.html'
+    # change_list_template = 'admin/authuser/authuser_student_change_list.html'
 
-    def get_urls(self, *args, **kwargs):
-        urls = super().get_urls(*args, **kwargs)
-        custom_urls = [
-            path('upload-student-csv', self.admin_site.admin_view(self.handle_csv_upload),
-                 name='handle-student-csv-upload')
-        ]
-        return custom_urls + urls
-
-    @staticmethod
-    def create_student_record_from_uploaded_csv(csv_file, batch, programme):
-        decoded_file = csv_file.read().decode('utf-8')
-        io_string = io.StringIO(decoded_file)
-        reader = csv.DictReader(io_string, delimiter=',', quotechar='|')
-        list_of_created_username = []
-        for row in reader:
-            name = row.get(NAME_FIELD)
-            email = row.get(EMAIL_FIELD)
-            roll_number = row.get(ROLL_NUMBER_FIELD)
-            phone = row.get(PHONE_FIELD, None)
-            group = row.get(GROUP_FIELD)
-            print(name, email, roll_number, phone, group)
-
-            try:
-                student_detail = StudentDetail.objects.create(email=email,
-                                                              name=name,
-                                                              roll_number=roll_number,
-                                                              programme=programme,
-                                                              batch=batch,
-                                                              group=group,
-                                                              phone=phone)
-                list_of_created_username.append(email)
-            except IntegrityError as e:
-                print(e, name, email, roll_number, phone, group)
-                for username in list_of_created_username:
-                    User.objects.get(username=username).delete()
-                raise IntegrityError(
-                    'A student with email %s is already registered. Please handle this manually.' % (
-                        email,))
-
-    def handle_csv_upload(self, request, *args, **kwargs):
-        context = self.admin_site.each_context(request)
-        if request.method != 'POST':
-            form = DetailsForUploadingStudentCSVForm
-        else:
-            form = DetailsForUploadingStudentCSVForm(request.POST, request.FILES)
-            if form.is_valid():
-                try:
-                    batch = form.cleaned_data.get('batch')
-                    programme = form.cleaned_data.get('programme')
-                    csv_file = request.FILES['csv_file']
-                    self.create_student_record_from_uploaded_csv(csv_file, batch, programme)
-                    return redirect(reverse('admin:authuser_studentdetail_changelist'))
-                except Exception as e:
-                    self.message_user(request, 'Failure: ' + str(e), messages.ERROR)
-
-        context['opts'] = self.model._meta
-        context['form'] = form
-        context['title'] = 'Upload .csv file with students detail'
-        return TemplateResponse(
-            request,
-            'admin/authuser/upload_csv.html',
-            context,
-        )
+    # def get_urls(self, *args, **kwargs):
+    #     urls = super().get_urls(*args, **kwargs)
+    #     custom_urls = [
+    #         path('upload-student-csv', self.admin_site.admin_view(self.handle_csv_upload),
+    #              name='handle-student-csv-upload')
+    #     ]
+    #     return custom_urls + urls
+    #
+    # @staticmethod
+    # def create_student_record_from_uploaded_csv(csv_file, batch, programme):
+    #     decoded_file = csv_file.read().decode('utf-8')
+    #     io_string = io.StringIO(decoded_file)
+    #     reader = csv.DictReader(io_string, delimiter=',', quotechar='|')
+    #     list_of_created_username = []
+    #     for row in reader:
+    #         name = row.get(NAME_FIELD)
+    #         email = row.get(EMAIL_FIELD)
+    #         roll_number = row.get(ROLL_NUMBER_FIELD)
+    #         phone = row.get(PHONE_FIELD, None)
+    #         group = row.get(GROUP_FIELD)
+    #         print(name, email, roll_number, phone, group)
+    #
+    #         try:
+    #             student_detail = StudentDetail.objects.create(email=email,
+    #                                                           name=name,
+    #                                                           roll_number=roll_number,
+    #                                                           programme=programme,
+    #                                                           batch=batch,
+    #                                                           group=group,
+    #                                                           phone=phone)
+    #             list_of_created_username.append(email)
+    #         except IntegrityError as e:
+    #             print(e, name, email, roll_number, phone, group)
+    #             for username in list_of_created_username:
+    #                 User.objects.get(username=username).delete()
+    #             raise IntegrityError(
+    #                 'A student with email %s is already registered. Please handle this manually.' % (
+    #                     email,))
+    #
+    # def handle_csv_upload(self, request, *args, **kwargs):
+    #     context = self.admin_site.each_context(request)
+    #     if request.method != 'POST':
+    #         form = DetailsForUploadingStudentCSVForm
+    #     else:
+    #         form = DetailsForUploadingStudentCSVForm(request.POST, request.FILES)
+    #         if form.is_valid():
+    #             try:
+    #                 batch = form.cleaned_data.get('batch')
+    #                 programme = form.cleaned_data.get('programme')
+    #                 csv_file = request.FILES['csv_file']
+    #                 self.create_student_record_from_uploaded_csv(csv_file, batch, programme)
+    #                 return redirect(reverse('admin:authuser_studentdetail_changelist'))
+    #             except Exception as e:
+    #                 self.message_user(request, 'Failure: ' + str(e), messages.ERROR)
+    #
+    #     context['opts'] = self.model._meta
+    #     context['form'] = form
+    #     context['title'] = 'Upload .csv file with students detail'
+    #     return TemplateResponse(
+    #         request,
+    #         'admin/authuser/upload_csv.html',
+    #         context,
+    #     )
 
 
 class TeacherDetailAdmin(admin.ModelAdmin):
@@ -201,7 +202,6 @@ class DepartmentAdmin(admin.ModelAdmin):
 admin.site.register(StudentDetail, StudentDetailAdmin)
 admin.site.register(TeacherDetail, TeacherDetailAdmin)
 admin.site.register(User, NewUserAdmin)
-admin.site.register(Department, DepartmentAdmin)
 
 admin.site.site_header = 'Classroom Updates'
 admin.site.site_title = 'Classroom Updates Admin'

@@ -1,0 +1,334 @@
+{% extends 'im/home/base.html'%}
+{% load static %}
+{% block extrahead %}
+<meta charset="UTF-8">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
+<title>Assessment Marks Entry Form</title>
+<link rel="shortcut icon" href="images/bookstack.ico"/>
+<link rel="icon" href="images/bookstack.ico" type="image/x-icon">
+<link rel="stylesheet" href="{% static 'clientside/display.css' %}">
+<style type="text/css">
+
+</style>
+<script>
+        var np_date = {
+            year:2076, mon:2,
+            mday:28};
+
+
+
+
+</script>
+
+<script type="text/javascript" src="{% static 'clientside/asstjsutils.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<body style="font-size:11pt; font-family:'Times New Roman', Georgia, Serif;">
+<form name="marks" id="marks" action="display_result" method="post" onsubmit="return validate();">
+    <table>
+        <tr>
+            <td style="width: 111px;"> &nbsp;</td>
+            <td style="width: 120px;"> &nbsp;</td>
+            <td style="width: 150px;"> &nbsp;</td>
+            <td style="width: 226px;"> &nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="4" class="center">TRIBHUVAN UNIVERSITY</td>
+        </tr>
+        <tr>
+            <td colspan="4" class="center">INSTITUTE OF ENGINEERING</td>
+        </tr>
+        <tr>
+            <td colspan="4" class="center">Pulchowk Campus</td>
+        </tr>
+        <tr>
+            <td colspan="4" class="left">&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="right">Programme: &nbsp;</td>
+            <td class="left">
+                <select name="prog" id="prog" onchange="updatesubs();updategroup();updatestudents();">
+                    {% for programme in programmes %}
+                    <option value="{{programme.short_form}}"> {{ programme.name }}</option>
+                    {% endfor %}
+                </select></td>
+            <td class="right">Group: &nbsp;</td>
+            <td class="left"><select name="group" id="group" onchange="updatestudents();">
+                <option> A</option>
+                <option> B</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td class="right">Year: &nbsp;</td>
+            <td class="left"><select name="year" id="year" onchange="updatesubs();">
+                <option> I</option>
+                <option> II</option>
+                <option> III</option>
+                <option> IV</option>
+            </select></td>
+            <td class="right">Batch: &nbsp;</td>
+            <td class="left"><select name="batch" id="batch" onchange="yearpart();updatesubs();updatestudents();">
+                <option> 2075</option>
+                <option> 2074</option>
+                <option> 2073</option>
+                <option> 2072</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="right">Part: &nbsp;</td>
+            <td class="left"><select name="part" id="part" onchange="updatesubs();">
+                <option> I</option>
+                <option> II</option>
+            </select></td>
+            <td class="right">Subject Code: &nbsp;</td>
+            <td class="left"><input type="text" name="code" id="code" size="10" readonly></td>
+        </tr>
+        <tr>
+            <td class="right">Full Marks: &nbsp;</td>
+            <td class="left"><input type="text" name="fm" id="fm" size="5" value="20" readonly></td>
+            <td class="right">Subject: &nbsp;</td>
+            <!-- <td class="left"><input type="text" name="subject" id="subject" size="30"></td> -->
+            <td class="left">
+                <select style="width: 220px" name="subjects" id="subjects" onchange="updatecodefmpm();">
+                    <option></option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="right">Pass Marks: &nbsp;</td>
+            <td class="left"><input type="text" name="pm" id="pm" size="5" value="8" readonly></td>
+            <td class="right">Prac./Theory: &nbsp;</td>
+            <td class="left"><select name="thpr" id="thpr" onchange="fmpm();">
+                <option value="th"> Theory</option>
+                <option value="pr"> Practical</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td class="right">Date: &nbsp;</td>
+            <td class="left"><input type="text" name="date" id="date" size="12"
+                                    value="2076/2/28">
+            </td>
+            <td class="right">Name of Examiner: &nbsp;</td>
+            <td class="left"><input type="text" name="exname" id="exname" size="30"></td>
+        </tr>
+        <tr>
+            <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3">Enter marks of one student in one line in following marks entry text area.</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3">Enter marks of students sequentially in order of increasing roll no for 24 students only.
+            </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3">For group A start entering marks from roll no 1, for group B start from 25 and so on.</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3">After entering marks press 'Generate Report' button to generate printable marks sheet.</td>
+        </tr>
+        <tr>
+            <td colspan="4"><span id="jsondata"></span>&nbsp;</td>
+        </tr>
+    </table>
+    <br>
+    <table>
+        <tr>
+            <th style="width:40px;vertical-align:bottom;" class="border">S. No.</th>
+            <th style="width:85px;vertical-align:bottom;" class="border">Roll No.</th>
+            <th style="width:250px;vertical-align:bottom;" class="left border">Name</th>
+            <th style="width:55px;vertical-align:bottom;" class="left border">Marks</th>
+            <th style="width:45px;">&nbsp;</th>
+            <th style="width:120px;" class="left border">Enter Marks or <br> Paste From Excel</th>
+        </tr>
+        <tr>
+            <td class="center border">1.</td>
+            <td class="center border"><span name="r1" id="r1"> </span></td>
+            <td class="left border nowrap"><span name="n1" id="n1"> </span></td>
+            <td class="left border"><input name="m1" id="m1" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+            <td rowspan="24" class="border">
+                <textarea name="asstmarks" id="asstmarks" cols="3" rows="24"
+                          style="font-size:16pt;resize:none;overflow:hidden;overflow-wrap:normal"
+                          onkeyup="limitrows(this);"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td class="center border">2.</td>
+            <td class="center border"><span name="r2" id="r2"></span></td>
+            <td class="left border nowrap"><span name="n2" id="n2"></span></td>
+            <td class="left border"><input name="m2" id="m2" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">3.</td>
+            <td class="center border"><span name="r3" id="r3"></span></td>
+            <td class="left border nowrap"><span name="n3" id="n3"></span></td>
+            <td class="left border"><input name="m3" id="m3" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">4.</td>
+            <td class="center border"><span name="r4" id="r4"></span></td>
+            <td class="left border nowrap"><span name="n4" id="n4"></span></td>
+            <td class="left border"><input name="m4" id="m4" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">5.</td>
+            <td class="center border"><span name="r5" id="r5"></span></td>
+            <td class="left border nowrap"><span name="n5" id="n5"></span></td>
+            <td class="left border"><input name="m5" id="m5" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">6.</td>
+            <td class="center border"><span name="r6" id="r6"></span></td>
+            <td class="left border nowrap"><span name="n6" id="n6"></span></td>
+            <td class="left border"><input name="m6" id="m6" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">7.</td>
+            <td class="center border"><span name="r7" id="r7"></span></td>
+            <td class="left border nowrap"><span name="n7" id="n7"></span></td>
+            <td class="left border"><input name="m7" id="m7" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">8.</td>
+            <td class="center border"><span name="r8" id="r8"></span></td>
+            <td class="left border nowrap"><span name="n8" id="n8"></span></td>
+            <td class="left border"><input name="m8" id="m8" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">9.</td>
+            <td class="center border"><span name="r9" id="r9"></span></td>
+            <td class="left border nowrap"><span name="n9" id="n9"></span></td>
+            <td class="left border"><input name="m9" id="m9" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">10.</td>
+            <td class="center border"><span name="r10" id="r10"></span></td>
+            <td class="left border nowrap"><span name="n10" id="n10"></span></td>
+            <td class="left border"><input name="m10" id="m10" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">11.</td>
+            <td class="center border"><span name="r11" id="r11"></span></td>
+            <td class="left border nowrap"><span name="n11" id="n11"></span></td>
+            <td class="left border"><input name="m11" id="m11" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">12.</td>
+            <td class="center border"><span name="r12" id="r12"></span></td>
+            <td class="left border nowrap"><span name="n12" id="n12"></span></td>
+            <td class="left border"><input name="m12" id="m12" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">13.</td>
+            <td class="center border"><span name="r13" id="r13"></span></td>
+            <td class="left border nowrap"><span name="n13" id="n13"></span></td>
+            <td class="left border"><input name="m13" id="m13" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">14.</td>
+            <td class="center border"><span name="r14" id="r14"></span></td>
+            <td class="left border nowrap"><span name="n14" id="n14"></span></td>
+            <td class="left border"><input name="m14" id="m14" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">15.</td>
+            <td class="center border"><span name="r15" id="r15"></span></td>
+            <td class="left border nowrap"><span name="n15" id="n15"></span></td>
+            <td class="left border"><input name="m15" id="m15" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">16.</td>
+            <td class="center border"><span name="r16" id="r16"></span></td>
+            <td class="left border nowrap"><span name="n16" id="n16"></span></td>
+            <td class="left border"><input name="m16" id="m16" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">17.</td>
+            <td class="center border"><span name="r17" id="r17"></span></td>
+            <td class="left border nowrap"><span name="n17" id="n17"></span></td>
+            <td class="left border"><input name="m17" id="m17" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">18.</td>
+            <td class="center border"><span name="r18" id="r18"></span></td>
+            <td class="left border nowrap"><span name="n18" id="n18"></span></td>
+            <td class="left border"><input name="m18" id="m18" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">19.</td>
+            <td class="center border"><span name="r19" id="r19"></span></td>
+            <td class="left border nowrap"><span name="n19" id="n19"></span></td>
+            <td class="left border"><input name="m19" id="m19" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">20.</td>
+            <td class="center border"><span name="r20" id="r20"></span></td>
+            <td class="left border nowrap"><span name="n20" id="n20"></span></td>
+            <td class="left border"><input name="m20" id="m20" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">21.</td>
+            <td class="center border"><span name="r21" id="r21"></span></td>
+            <td class="left border nowrap"><span name="n21" id="n21"></span></td>
+            <td class="left border"><input name="m21" id="m21" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">22.</td>
+            <td class="center border"><span name="r22" id="r22"></span></td>
+            <td class="left border nowrap"><span name="n22" id="n22"></span></td>
+            <td class="left border"><input name="m22" id="m22" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">23.</td>
+            <td class="center border"><span name="r23" id="r23"></span></td>
+            <td class="left border nowrap"><span name="n23" id="n23"></span></td>
+            <td class="left border"><input name="m23" id="m23" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center border">24.</td>
+            <td class="center border"><span name="r24" id="r24"></span></td>
+            <td class="left border nowrap"><span name="n24" id="n24"></span></td>
+            <td class="left border"><input name="m24" id="m24" type="text" size="3" readonly></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="center">&nbsp;</td>
+            <td>&nbsp;</td>
+            <td class="left"><input type="submit" value="Generate Report"></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</form>
+<p style="text-align: center;"></p>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+    <link href="{% static 'clientside/custom.css'%}" rel="stylesheet" id="bootstrap-css">
+    {% block extrahead %}
+    {% endblock %}
+</head>
+<body>
+<div class="header">
+    <a href="{% url 'home' %}"><img height="100px" width="100px" src="{% static '/logo/tu_logo.png'%}"></a>
+    <div class="header-left">
+        <h1> Tribhuwan University </h1>
+        <h4 style="margin-top:-15px;margin-left:15px;"> IOE Pulchowk Campus </h4>
+    </div>
+    <div class="header-right">
+        <a class="active" href="{% url 'home' %}">Home</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </div>
+</div>
+{% block content %}
+{% endblock %}
+</body>
+</html>

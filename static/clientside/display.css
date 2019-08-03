@@ -1,0 +1,58 @@
+/* Style Selectors for Displaying Assesment Marks */
+
+.imp {
+    font-style: italic;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.circlenum {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 2px;
+    border: 2px solid red;
+    color: red;
+    text-align: center;
+    font: 11pt Arial, sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto; /* equivalent align attribute of <table> */
+}
+
+td, th {
+    padding-left: 2pt;
+    padding-right: 2pt;
+}
+
+table.wborder th, table.wborder td {
+    border: 1px solid black;
+}
+
+td.center, th.center {
+    text-align: center;
+}
+
+td.left, th.left {
+    text-align: left;
+}
+
+td.right, th.right {
+    text-align: right;
+}
+
+td.border, th.border {
+    border: 1px solid black;
+}
+
+td.nowrap {
+    white-space: nowrap;
+}
+
+select {
+    height: 23px;
+    line-height: 23px;
+}

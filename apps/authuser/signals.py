@@ -16,6 +16,7 @@ User = get_user_model()
 
 
 def send_account_creation_email(detail):
+    return
     context = {
         'detail': detail
     }
@@ -28,7 +29,7 @@ def send_account_creation_email(detail):
     # create the email, and attach the HTML version as well.
     msg = EmailMultiAlternatives(subject, text_content, from_email, [detail.email, ])
     msg.attach_alternative(html_content, "text/html")
-    # msg.send()
+    msg.send()
 
 
 def get_random_password():

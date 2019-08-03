@@ -1,0 +1,13 @@
+{% extends 'im/home/base.html' %}
+{% block title %}
+Error
+{% endblock %}
+{% block content %}
+Below given are the errors please correct them manually, press back button of the browser to go back
+<br>
+<br>
+{% for name, error in errors.items %}
+{{name}}: {{error}}
+<br>
+{% endfor %}
+{% endblock %}

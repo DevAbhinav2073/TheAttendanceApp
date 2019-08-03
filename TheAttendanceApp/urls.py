@@ -31,7 +31,7 @@ router.register('feedback', FeedbackViewSet)
 router.register('notice', NoticeViewSet)
 
 urlpatterns = [
-                  path('', RedirectView.as_view(url='admin/')),
+                  path('', RedirectView.as_view(url='im/')),
                   path('admin/', admin.site.urls),
                   path('api/login/', LoginAPIView.as_view(), name='login'),
                   path('api/get_own_detail/', get_own_detail, name='get_own_detail'),
@@ -43,6 +43,7 @@ urlpatterns = [
                   path('api/get_stats/<int:teacher_id>/', get_stats, name='get_stats_ac_teacher'),
                   path('api/get_list_of_teachers/', get_list_of_teachers, name='get_list_of_teachers'),
                   path('csv_uploader/', include('apps.csv_uploader.urls')),
+                  path('im/', include('apps.im.urls')),
 
               ] \
               + static('static', document_root=settings.STATIC_ROOT) \

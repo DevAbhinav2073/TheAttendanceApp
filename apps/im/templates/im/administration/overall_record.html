@@ -1,0 +1,54 @@
+{% extends 'im/home/base.html' %}
+{% load course_detail_tags %}
+{% block title %}
+See Result Batch wise
+{% endblock %}
+{% block content %}
+<div class="well">
+    <form action="" enctype="multipart/form-data" method="post" class="form-inline">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button">See Record</button>
+    </form>
+</div>
+<ul>
+    {% for department in departments %}
+    {{department}}
+    <ul>
+        {% for programme in department.programmes.all %}
+        {{programme}}
+        <ul>
+            {% for course_detail in programme.course_detail.all %}
+            <li>{{course_detail}}</li>
+            <ul>
+                {% for group in programme.groups_list %}
+                Group: {{group}}
+                <ul>
+
+                    {% has_marks course_detail=course_detail batch=batch th_pr='Th' group=group as has_th_marks %}
+                    {% if has_th_marks %}
+                    <li>
+                        <a href="{% get_marks_seeing_url course_detail=course_detail batch=batch th_pr='Th' group=group %}">Theory
+                            Marks Received</a></li>
+                    {% else %}
+                    <li>Theory marks not received yet</li>
+                    {% endif %}
+                    {% has_marks course_detail=course_detail batch=batch th_pr='Pr' group=group as has_pr_marks %}
+                    {% if has_pr_marks %}
+                    <li>
+                        <a href="{% get_marks_seeing_url course_detail=course_detail batch=batch th_pr='Pr' group=group %}">Practical
+                            Marks Received</a></li>
+                    {% else %}
+                    <li>Practical marks not received yet</li>
+                    {% endif %}
+                </ul>
+                {% endfor %}
+                {% endfor %}
+            </ul>
+        </ul>
+        {% endfor %}
+    </ul>
+
+    {% endfor %}
+</ul>
+{% endblock %}

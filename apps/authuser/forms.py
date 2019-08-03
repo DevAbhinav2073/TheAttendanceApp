@@ -2,9 +2,8 @@ import io
 
 from django import forms
 
-from apps.authuser.models import Department
 from apps.constants import *
-from apps.information.models import Programme
+from apps.information.models import *
 
 REQUIRED_FIELDS_FOR_STUDENTS = [NAME_FIELD, EMAIL_FIELD, PHONE_FIELD, GROUP_FIELD, ROLL_NUMBER_FIELD]
 REQUIRED_FIELDS_FOR_TEACHERS = [NAME_FIELD, EMAIL_FIELD, PHONE_FIELD]

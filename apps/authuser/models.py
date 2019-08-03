@@ -56,18 +56,10 @@ class Teacher(User):
         proxy = True
 
 
-class Department(models.Model):
-    name = models.CharField(max_length=50, )
-    allow_import_csv = True
-
-    def __str__(self):
-        return self.name
-
-
 class TeacherDetail(models.Model):
     user = models.OneToOneField('authuser.User', limit_choices_to={
         'user_type': USER_TYPE_TEACHER
-    }, null=True, related_name='teacher_detail', on_delete=models.CASCADE)
+    }, null=True, blank=True, related_name='teacher_detail', on_delete=models.CASCADE)
     name = models.CharField(max_length=50, default='')
     email = models.EmailField()
     short_name = models.CharField(max_length=50, null=True)
@@ -75,7 +67,7 @@ class TeacherDetail(models.Model):
     is_full_timer = models.BooleanField(default=True)
     subjects = models.CharField(max_length=100, null=True)
     password = models.CharField(max_length=50, blank=True, null=True)
-    department = models.ForeignKey('authuser.Department', null=True, on_delete=models.SET_NULL)
+    department = models.ForeignKey('information.Department', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
@@ -87,6 +79,7 @@ class StudentDetail(models.Model):
     },
                                 related_name='student_detail',
                                 null=True,
+                                blank=True,
                                 on_delete=models.CASCADE)
     name = models.CharField(max_length=50, default='')
     email = models.EmailField(unique=True)

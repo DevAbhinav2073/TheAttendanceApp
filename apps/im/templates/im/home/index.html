@@ -1,0 +1,36 @@
+{% extends 'im/home/base.html' %}
+{% load static %}
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+
+<div class="row">
+    <a href="{% url 'enter_marks' %}">
+        <div class="column">
+            <div class="card">
+                <img height="100px" width="100px" src="{% static '/icon/enter_marks.png'%}">
+                <h3>Enter Marks</h3>
+            </div>
+        </div>
+    </a>
+
+    <a href="{% url 'see_marks' %}">
+        <div class="column">
+            <div class="card">
+                <img height="100px" width="100px" src="{% static '/icon/view_single.png'%}">
+                <h3>See Marks</h3>
+            </div>
+        </div>
+    </a>
+
+    <a href="{% url 'see_records_department' %}">
+        <div class="column">
+            <div class="card">
+                <img height="100px" width="100px" src="{% static '/icon/view_bulk.png'%}">
+                <h3>See marks batch wise</h3>
+            </div>
+        </div>
+    </a>
+</div>
+{% endblock %}

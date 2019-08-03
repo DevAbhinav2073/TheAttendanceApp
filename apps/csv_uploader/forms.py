@@ -34,8 +34,10 @@ class CSVUploadForm(forms.Form):
         all_model_fields = self.model._meta.get_fields()
         all_fk_model_fields = []
         all_non_fk_model_fields = []
+
         for field in all_model_fields:
-            if isinstance(self.model._meta.get_field(field.name), ForeignKey):
+            if isinstance(self.model._meta.get_field(field.name), ForeignKey) and (
+                    hasattr(field, 'blank') and not field.blank):
                 all_fk_model_fields.append(field.name)
             else:
                 all_non_fk_model_fields.append(field.name)

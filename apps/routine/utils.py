@@ -21,6 +21,21 @@ def get_integer_value(value):
     return 1
 
 
+def get_roman_value(value):
+    value = int(value)
+    if value == 1:
+        return 'I'
+    elif value == 2:
+        return 'II'
+    elif value == 3:
+        return 'III'
+    elif value == 4:
+        return 'IV'
+    elif value == 5:
+        return 'V'
+    return value
+
+
 def get_current_semester(year=None, part=None):
     if year and part:
         semester_detail = get_object_or_404(SemesterDetail.objects.all(), academic_year=year, part=part)

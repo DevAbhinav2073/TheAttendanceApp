@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assesment Marks</title>
+    <link rel="shortcut icon" href="images/bookstack.ico"/>
+    <link rel="icon" href="images/bookstack.ico" type="image/x-icon">
+    <link rel="stylesheet" href="{% static "clientside/display.css" %}">
+</head>
+
+<body style="font-size:11pt; font-family:'Times New Roman', Georgia, Serif">
+
+<table>
+    <tr>
+        <td style="height: 20pt;width: 20px">&nbsp;</td>
+        <td style="width: 680px;">&nbsp;</td>
+        <td style="width: 20px;">&nbsp;</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td>
+            <table style="width:100%">
+                <col style="width: 157px;">
+                <col style="width: 334px;">
+                <col style="width: 187px;">
+                <tr>
+                    <td colspan="3" class="center">TRIBHUVAN UNIVERSITY</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="center">INSTITUTE OF ENGINEERING</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="center">Pulchowk Campus</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="center">Bachelor's Degree in <span
+                            class="imp">{{program_name}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="center">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="center"> Group: <span class="imp">{{group}}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="center">Year: <span class="imp">{{year}}</span>
+                        Part: <span class="imp">{{part}}</span>
+                        Batch: <span class="imp">{{batch}}</span></td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="left">Full Marks:
+                        <span class="imp">{{full_mark}}</span></td>
+                    <td class="left"></td>
+                    <td class="left">Code No.:
+                        <span class="imp">{{subject_code}}</span></td>
+                </tr>
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="left">Pass Marks:
+                        <span class="imp">{{pass_mark}}</span></td>
+                    <td class="left">Subject:
+                        <span class="imp">{{subject_name}}</span></td>
+                    <td class="left">Prac./Theory:
+                        <span class="imp">{{th_pr_full}}</span></td>
+                </tr>
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="center">
+                        <table class="wborder" style="width:100%">
+                            <col style="width: 6%;">
+                            <col style="width: 15%;">
+                            <col style="width: 42%;">
+                            <col style="width: 11%;">
+                            <col style="width: 15%;">
+                            <col style="width: 11%;">
+                            <tr>
+                                <th rowspan="2">S. No.</th>
+                                <th rowspan="2">CRN</th>
+                                <th rowspan="2">NAME</th>
+                                <th colspan="2" class="center">Assesment</th>
+                                <th rowspan="2">Remarks</th>
+                            </tr>
+                            <tr>
+                                <th>In Figure</th>
+                                <th>In Words</th>
+                            </tr>
+                            {% for student in students %}
+                            <tr>
+                                <td class="center"> {{ forloop.counter }}</td>
+                                <td class="left">
+                                    {{student.roll}}
+                                </td>
+                                <td class="left">{{ student.name }}</td>
+                                <td class="center"><span {% if student.is_fail %}class="circlenum"{% endif %}>{{ student.mark }}</span></td>
+                                <td class="left"> {{student.mark_in_word}}</td>
+                                <td class="left"> {{student.remark }}</td>
+                            </tr>
+                            {% endfor %}
+
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="left">Date:
+                        <span class="imp">{{date}}</span></td>
+                    <td class="left">Name of Examiner:
+                        <span class="imp">{{examineer_name}}</span></td>
+                    <td class="left">Signature:________________</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="left">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="left">Important:</td>
+                    <td class="left">&nbsp;</td>
+                    <td class="left">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="left">For Assesment Purpose - Following should be written in brief :</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="left">a) Full marks, Pass marks, Title &amp; Code No.</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="left">b) Marks in Words, Date, Name &amp; Signature of the Examiner.</td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="left">c) Absentee, absentees - 'A' and Failed marks must be circled.</td>
+                </tr>
+
+            </table>
+        </td>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td colspan="3">&nbsp;</td>
+    </tr>
+</table>
+</body>
+</html>
+

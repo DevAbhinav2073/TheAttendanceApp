@@ -25,7 +25,7 @@ See Result Batch wise
                 Group: {{group}}
                 <ul>
 
-                    {% has_marks course_detail=course_detail batch=batch th_pr='Th' group=group as has_th_marks %}
+                    {% has_marks course_detail=course_detail batch=batch th_pr='th' group=group as has_th_marks %}
                     {% if has_th_marks %}
                     <li>
                         <a href="{% get_marks_seeing_url course_detail=course_detail batch=batch th_pr='Th' group=group %}">Theory
@@ -33,7 +33,7 @@ See Result Batch wise
                     {% else %}
                     <li>Theory marks not received yet</li>
                     {% endif %}
-                    {% has_marks course_detail=course_detail batch=batch th_pr='Pr' group=group as has_pr_marks %}
+                    {% has_marks course_detail=course_detail batch=batch th_pr='pr' group=group as has_pr_marks %}
                     {% if has_pr_marks %}
                     <li>
                         <a href="{% get_marks_seeing_url course_detail=course_detail batch=batch th_pr='Pr' group=group %}">Practical

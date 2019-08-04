@@ -20,7 +20,8 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 from rest_framework.routers import DefaultRouter
 
-from apps.authuser.views import LoginAPIView, get_own_detail, can_send_feedback, FeedbackViewSet, get_list_of_teachers
+from apps.authuser.views import LoginAPIView, get_own_detail, can_send_feedback, FeedbackViewSet, get_list_of_teachers, \
+    upload_image
 from apps.im.views import get_internal_marks
 from apps.information.views import *
 from apps.routine.views import GetRoutineView, ClassAttendingViewSet, get_stats, ArrivalTimeViewSet
@@ -45,6 +46,7 @@ urlpatterns = [
                   path('api/', include(router.urls)),
                   path('api/get_stats/<int:teacher_id>/', get_stats, name='get_stats_ac_teacher'),
                   path('api/get_list_of_teachers/', get_list_of_teachers, name='get_list_of_teachers'),
+                  path('api/upload_image/', upload_image, name='upload_image'),
                   path('api/get_internal_marks/', get_internal_marks, name='get_internal_marks'),
                   path('csv_uploader/', include('apps.csv_uploader.urls')),
                   path('im/', include('apps.im.urls')),

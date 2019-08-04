@@ -12,6 +12,7 @@ class User(AbstractUser):
         (USER_TYPE_STUDENT, USER_TYPE_STUDENT),
         (USER_TYPE_TEACHER, USER_TYPE_TEACHER)
     ), default=USER_TYPE_TEACHER)
+    image = models.ImageField(upload_to='uploads/image', null=True, blank=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

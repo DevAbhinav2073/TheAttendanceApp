@@ -1,7 +1,9 @@
+import base64
 from datetime import datetime
 
 import timestring
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
 # Create your views here.
 from rest_framework import parsers, renderers, status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
@@ -102,3 +104,19 @@ def get_list_of_teachers(request):
         return Response(UserSerializer(teachers, many=True).data, status=status.HTTP_200_OK)
     else:
         return Response([], status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST', ])
+@permission_classes([IsAuthenticated, ])
+def upload_image(request):
+    image = request.data.get('image', None)
+    import pdb
+    pdb.set_trace()
+    if image:
+        format, imgstr = image.split(';base64,')
+        ext = format.split('/')[-1]
+        data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)  # You can save this as file instance.
+        request.user.image = data
+        request.user.save()
+        return Response({'detail': 'Image uploaded Successfully'}, status=status.HTTP_200_OK)
+    return Response({'detail': 'Some error occurred'}, status=status.HTTP_400_BAD_REQUEST)

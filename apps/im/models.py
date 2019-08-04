@@ -6,8 +6,8 @@ from django.db import models
 from django.urls import reverse
 
 THEORY_PRACTICAL_CHOICES = (
-    ('Th', 'Theory'),
-    ('Pr', 'Practical'),
+    ('th', 'Theory'),
+    ('pr', 'Practical'),
 )
 
 YEAR_CHOICES = (

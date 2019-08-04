@@ -22,7 +22,7 @@ from rest_framework.routers import DefaultRouter
 
 from apps.authuser.views import LoginAPIView, get_own_detail, can_send_feedback, FeedbackViewSet, get_list_of_teachers
 from apps.im.views import get_internal_marks
-from apps.information.views import NoticeViewSet
+from apps.information.views import *
 from apps.routine.views import GetRoutineView, ClassAttendingViewSet, get_stats, ArrivalTimeViewSet
 
 router = DefaultRouter()
@@ -30,6 +30,8 @@ router.register('class-attending-detail', ClassAttendingViewSet)
 router.register('arrival-time-detail', ArrivalTimeViewSet)
 router.register('feedback', FeedbackViewSet)
 router.register('notice', NoticeViewSet)
+router.register('department', DepartmentViewSet)
+router.register('programme', ProgrammeViewSet)
 
 urlpatterns = [
                   path('', RedirectView.as_view(url='im/')),

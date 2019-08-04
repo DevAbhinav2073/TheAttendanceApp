@@ -1,8 +1,8 @@
 # Create your views here.
 from rest_framework.viewsets import ModelViewSet
 
-from apps.information.models import Notice
-from apps.information.serializers import NoticeSerializer
+from apps.information.models import Notice, Department, Programme
+from apps.information.serializers import NoticeSerializer, DepartmentSerializer, ProgrammeSerializer
 
 
 class NoticeViewSet(ModelViewSet):
@@ -18,3 +18,13 @@ class NoticeViewSet(ModelViewSet):
                                         part=self.request.user.student_detail.current_part
                                         )
         return self.queryset
+
+
+class DepartmentViewSet(ModelViewSet):
+    serializer_class = DepartmentSerializer
+    queryset = Department.objects.all()
+
+
+class ProgrammeViewSet(ModelViewSet):
+    serializer_class = ProgrammeSerializer
+    queryset = Programme.objects.all()

@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from apps.permissions import IsTeacher
 from apps.routine.models import RoutineDetail, Routine, ClassAttendingDetail, ArrivalTime
 from apps.routine.serializers import RoutineDetailSerializer, ClassAttendingSerializer, ArrivalTimeSerializer
 from apps.routine.utils import get_current_semester
@@ -122,3 +123,17 @@ def get_stats(request, teacher_id):
         'not_attended': not_attended_count,
         'arrived_late': arrived_late_count
     })
+
+
+@api_view(['GET', ])
+@permission_classes([IsTeacher, ])
+def get_routine_update_detail(request):
+    user = request.user
+    date = request.GET.get('date', datetime.now().date())
+    routine_details_ids = ClassAttendingDetail.objects.filter(teacher=user, date=date).values_list('routine_detail',
+                                                                                                   flat=True)
+    routine_details = RoutineDetail.objects.filter(id__in=routine_details_ids)
+    context = {
+        'date': date
+    }
+    return Response(RoutineDetailSerializer(routine_details, context=context, many=True).data, )

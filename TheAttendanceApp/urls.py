@@ -24,7 +24,8 @@ from apps.authuser.views import LoginAPIView, get_own_detail, can_send_feedback,
     upload_image
 from apps.im.views import get_internal_marks
 from apps.information.views import *
-from apps.routine.views import GetRoutineView, ClassAttendingViewSet, get_stats, ArrivalTimeViewSet
+from apps.routine.views import GetRoutineView, ClassAttendingViewSet, get_stats, ArrivalTimeViewSet, \
+    get_routine_update_detail
 
 router = DefaultRouter()
 router.register('class-attending-detail', ClassAttendingViewSet)
@@ -48,6 +49,7 @@ urlpatterns = [
                   path('api/get_list_of_teachers/', get_list_of_teachers, name='get_list_of_teachers'),
                   path('api/upload_image/', upload_image, name='upload_image'),
                   path('api/get_internal_marks/', get_internal_marks, name='get_internal_marks'),
+                  path('api/get_routine_update_detail/', get_routine_update_detail, name='get_routine_update_detail'),
                   path('csv_uploader/', include('apps.csv_uploader.urls')),
                   path('im/', include('apps.im.urls')),
 

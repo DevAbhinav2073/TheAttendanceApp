@@ -110,8 +110,6 @@ def get_list_of_teachers(request):
 @permission_classes([IsAuthenticated, ])
 def upload_image(request):
     image = request.data.get('image', None)
-    import pdb
-    pdb.set_trace()
     if image:
         format, imgstr = image.split(';base64,')
         ext = format.split('/')[-1]

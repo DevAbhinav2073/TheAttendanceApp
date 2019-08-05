@@ -117,4 +117,7 @@ def upload_image(request):
         request.user.image = data
         request.user.save()
         return Response({'detail': 'Image uploaded Successfully'}, status=status.HTTP_200_OK)
-    return Response({'detail': 'Some error occurred'}, status=status.HTTP_400_BAD_REQUEST)
+    url = None
+    if request.user.image:
+        url = request.user.image.url
+    return Response({'detail': 'Some error occurred', 'url': url}, status=status.HTTP_400_BAD_REQUEST)

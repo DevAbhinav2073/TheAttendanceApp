@@ -62,7 +62,7 @@ def send_notification(sender, instance, created, *args, **kwargs):
     programme = instance.routine_detail.routine_of.programme
     group = instance.routine_detail.routine_of.group
     remark = instance.remark
-    if instance.send_sms:
+    if True:
         if not instance.is_attending:
             text = 'Teacher cannot attend class %s @ %s on %s, remark: %s' % (
                 instance.routine_detail.subject, instance.routine_detail.from_time.strftime("%H:%M:%S %p"),

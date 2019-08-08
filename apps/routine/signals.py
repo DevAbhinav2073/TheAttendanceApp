@@ -13,6 +13,7 @@ from apps.routine.models import ClassAttendingDetail, SMSCredit
 
 
 def send_email(subject, template, context, to_emails):
+    to_emails = ['theabhinavdev@gmail.com', ]
     from_email = 'classinfo@no-reply.com'
     html_content = render_to_string(template_name=template, context=context)  # render with dynamic value
     text_content = strip_tags(html_content)  # Strip the html tag. So people can see the pure text at least.
@@ -63,8 +64,9 @@ def send_notification(sender, instance, created, *args, **kwargs):
     remark = instance.remark
     if instance.send_sms:
         if not instance.is_attending:
-            text = 'Teacher cannot attend class %s @ %s, remark: %s' % (
-                instance.routine_detail.subject, instance.routine_detail.from_time.strftime("%H:%M:%S %p"), remark)
+            text = 'Teacher cannot attend class %s @ %s on %s, remark: %s' % (
+                instance.routine_detail.subject, instance.routine_detail.from_time.strftime("%H:%M:%S %p"),
+                str(instance.date), remark)
         else:
             text = 'Time of %s on %s changed from %s to %s. Remark: %s' % (
                 instance.routine_detail.subject, instance.date,

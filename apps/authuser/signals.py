@@ -16,7 +16,6 @@ User = get_user_model()
 
 
 def send_account_creation_email(detail):
-    return
     context = {
         'detail': detail
     }

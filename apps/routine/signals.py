@@ -29,7 +29,7 @@ def send_sms(number, text, footnote):
         return
     url = "http://api.sparrowsms.com/v2/sms/"
     message = '%s - %s' % (text, footnote)
-    querystring = {"token": "SpjwPldIkL6WuzQRb2MJ", "from": "InfoSMS", "to": number,
+    querystring = {"token": "*******", "from": "InfoSMS", "to": number,
                    "text": message}
 
     payload = ""

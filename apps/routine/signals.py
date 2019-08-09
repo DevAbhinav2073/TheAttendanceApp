@@ -13,7 +13,6 @@ from apps.routine.models import ClassAttendingDetail, SMSCredit
 
 
 def send_email(subject, template, context, to_emails):
-    to_emails = ['theabhinavdev@gmail.com', ]
     from_email = 'classinfo@no-reply.com'
     html_content = render_to_string(template_name=template, context=context)  # render with dynamic value
     text_content = strip_tags(html_content)  # Strip the html tag. So people can see the pure text at least.
@@ -84,7 +83,7 @@ def send_notification(sender, instance, created, *args, **kwargs):
 
         filtered_emails = [stu.email for stu in StudentDetail.objects.all() if
                            (stu.current_year == year and stu.current_part == part and stu.programme == programme
-                            and stu.group == group)]
+                            )]
         if instance.is_cancelled:
             subject = 'Class cancelled'
             template = 'routine/class_cancelled.html'
